@@ -4,73 +4,56 @@
 #include <stdbool.h>
 #pragma warning(disable : 4996)
 
-typedef struct complex_t {
-	double real;
-	double imag;
-}complex_t;
 
 typedef struct root_t {
-	complex_t x1;
-	complex_t x2;
+	double x1;
+	double x2;
 } root_t;
 
 root_t InitRoot() {
 	root_t root;
-	root.x1.imag = 0;
-	root.x1.real = 0;
-	root.x2.imag = 0;
-	root.x2.real = 0;
-
+	root.x1 = 0.0f;
+	root.x2 = 0.0f;
 	return root;
 }
 
 bool QuadricEqSolution(double a, double b, double c, root_t* roots) {
-	if (a == 0) {
+	if (a == 0.0f) {
 		printf("Equation is not quadric");
 		return false;
 	}
 	*roots = InitRoot();
-	double D = 0;
-	D = b * b - 4 * a * c;
+	double D = 0.0f;
+	D = b * b - 4.0 * a * c;
 	
-	if (D > 0) {
+	if (D >= 0.0f) {
 		D = sqrt(D);
-		roots->x1.real = (-b + D) / (2 * a);
-		roots->x2.real = (-b - D) / (2 * a);
+		roots->x1 = (-b + D) / (2.0 * a);
+		roots->x2 = (-b - D) / (2.0 * a);
 		return true;
 	}
 	else {
-		roots->x1.real = -b / (2 * a);
-		roots->x2.real = roots->x1.real;
-
-		if (D == 0) 
-			return true;
-		else {
-			D = sqrt(-D);
-			roots->x1.imag = sqrt(D) / (2 * a);
-			roots->x2.imag = -sqrt(D) / (2 * a);
-			return true;
-		}
+		printf("There are no real roots.");
+		return false;
 	}
 }
 void PrintRoots(root_t roots) {
-	if (roots.x1.real == roots.x2.real) {
-		if (roots.x1.imag == roots.x2.imag)
-				printf("\nThe root is %.3lf", roots.x1.real);
-		else printf("\nThe roots are %.3lf+%.3lfi and %.3lf%.3lfi", 
-			roots.x1.real, roots.x1.imag, roots.x2.real, roots.x2.imag);
-	}
+	if (roots.x1 == roots.x2)
+		printf("\nThe root is %.3lf", roots.x1);
 	else
-		printf("\nThe roots are %.3lf and %.3lf", roots.x1.real, roots.x2.real);
+		printf("\nThe roots are %.3lf and %.3lf", roots.x1, roots.x2);
+}
+
+void Input(double* a, double* b, double* c) {
+	printf("Input a, b, c of quadratic equation ax^2 + bx + c = 0 separated by space\n");
+	scanf("%lf %lf %lf", a, b, c);
 }
 
 int main() {
-	double a = 0, b = 0, c = 0;
-	printf("Input a, b, c of quadratic equation ax^2 + bx + c = 0 separated by space\n");
-	scanf("%lf %lf %lf", &a, &b, &c);
-
+	double a = 0.0f, b = 0.0f, c = 0.0f;
 	root_t roots;
-	QuadricEqSolution(a, b, c, &roots);
-	PrintRoots(roots);
+	Input(&a, &b, &c);
+	if (QuadricEqSolution(a, b, c, &roots) == true)
+		PrintRoots(roots);
 	return 0;
 }
